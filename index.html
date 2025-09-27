@@ -767,22 +767,21 @@
                 
                 if (!provasGrid) return;
 
-                async function fileExists(relativePath) {
+                const fileExists = async (url) => {
                     try {
-                        const url = new URL(relativePath, window.location.href);
                         const response = await fetch(url, { method: 'HEAD', cache: 'no-store' });
                         return response.ok;
-                    } catch (e) {
+                    } catch (error) {
                         return false;
                     }
-                }
+                };
 
                 const anosDisponiveis = [2024, 2023, 2022, 2021, 2020, 2016];
 
                 for (const ano of anosDisponiveis) {
                     const provaPath = `prova${ano}.pdf`;
                     const gabaritoPath = `gabarito${ano}.pdf`;
-
+                    
                     const [provaOk, gabaritoOk] = await Promise.all([
                         fileExists(provaPath),
                         fileExists(gabaritoPath)
@@ -792,21 +791,23 @@
                         const provaCard = document.createElement('div');
                         provaCard.className = 'interactive-card pulsing-card bg-gray-800 p-4 rounded-lg border border-gray-700 transition-all duration-300';
                         
+                        let buttonsHTML = `
+                            <a href="${provaPath}" target="_blank" rel="noopener noreferrer" class="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded text-sm transition-colors duration-300">Prova</a>
+                            <a href="${gabaritoPath}" target="_blank" rel="noopener noreferrer" class="bg-gray-600 hover:bg-gray-500 text-white px-3 py-2 rounded text-sm transition-colors duration-300">Gabarito</a>
+                        `;
+                        
                         provaCard.innerHTML = `
                             <div class="flex flex-col sm:flex-row items-center justify-between">
                                 <div>
                                     <h3 class="font-bold text-lg text-white">Vestibulinho ${ano}</h3>
                                     <p class="text-sm text-gray-400">Prova e Gabarito</p>
                                 </div>
-                                <div class="flex flex-wrap gap-2 mt-2 sm:mt-0">
-                                    <a href="${provaPath}" target="_blank" rel="noopener noreferrer" class="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded text-sm transition-colors duration-300">Prova</a>
-                                    <a href="${gabaritoPath}" target="_blank" rel="noopener noreferrer" class="bg-gray-600 hover:bg-gray-500 text-white px-3 py-2 rounded text-sm transition-colors duration-300">Gabarito</a>
-                                </div>
+                                <div class="flex flex-wrap gap-2 mt-2 sm:mt-0">${buttonsHTML}</div>
                             </div>`;
                         provasGrid.appendChild(provaCard);
                     }
                 }
-                
+
                 if (await fileExists('criterios.pdf')) {
                     criteriosLink.classList.remove('hidden');
                     criteriosText.classList.remove('hidden');
