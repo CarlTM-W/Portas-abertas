@@ -431,7 +431,7 @@
                     <div class="opinion-card pulsing-card bg-gray-800 p-6 rounded-lg border border-gray-700">
                         <div class="flex items-center mb-4">
                             <div class="relative w-16 h-16 mr-4 group flex-shrink-0 pulsing-photo">
-                                <img src="lavínia lima.jpg" onerror="this.onerror=null;this.src='https://placehold.co/64x64/DC2626/FFFFFF?text=LL'" alt="Foto de Lavínia Lima" class="w-full h-full rounded-full border-2 border-gray-700 object-cover">
+                                <img src="lavinia.jpg" onerror="this.onerror=null;this.src='https://placehold.co/64x64/DC2626/FFFFFF?text=LL'" alt="Foto de Lavínia Lima" class="w-full h-full rounded-full border-2 border-gray-700 object-cover">
                                 <div class="absolute inset-0 bg-black bg-opacity-70 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                     <span class="text-white font-bold text-lg">LL</span>
                                 </div>
@@ -461,7 +461,7 @@
                     <div class="opinion-card pulsing-card bg-gray-800 p-6 rounded-lg border border-gray-700">
                         <div class="flex items-center mb-4">
                             <div class="relative w-16 h-16 mr-4 group flex-shrink-0 pulsing-photo">
-                                <img src="maria silva.jpg" onerror="this.onerror=null;this.src='https://placehold.co/64x64/DC2626/FFFFFF?text=MS'" alt="Foto de Maria Silva" class="w-full h-full rounded-full border-2 border-gray-700 object-cover">
+                                <img src="maria.jpg" onerror="this.onerror=null;this.src='https://placehold.co/64x64/DC2626/FFFFFF?text=MS'" alt="Foto de Maria Silva" class="w-full h-full rounded-full border-2 border-gray-700 object-cover">
                                 <div class="absolute inset-0 bg-black bg-opacity-70 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                     <span class="text-white font-bold text-lg">MS</span>
                                 </div>
@@ -476,7 +476,7 @@
                     <div class="opinion-card pulsing-card bg-gray-800 p-6 rounded-lg border border-gray-700">
                         <div class="flex items-center mb-4">
                             <div class="relative w-16 h-16 mr-4 group flex-shrink-0 pulsing-photo">
-                                <img src="joão santos.jpg" onerror="this.onerror=null;this.src='https://placehold.co/64x64/DC2626/FFFFFF?text=JS'" alt="Foto de João Santos" class="w-full h-full rounded-full border-2 border-gray-700 object-cover">
+                                <img src="joao.jpg" onerror="this.onerror=null;this.src='https://placehold.co/64x64/DC2626/FFFFFF?text=JS'" alt="Foto de João Santos" class="w-full h-full rounded-full border-2 border-gray-700 object-cover">
                                 <div class="absolute inset-0 bg-black bg-opacity-70 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                     <span class="text-white font-bold text-lg">JS</span>
                                 </div>
@@ -686,7 +686,14 @@
                 questionResult.innerHTML = loadingHTML;
                 questionSubmit.disabled = true;
                 try {
-                    const systemInstruction = `Você é um assistente virtual amigável e entusiasmado do Colégio Técnico Industrial de Guaratinguetá (CTIG). Sua missão é tirar dúvidas de futuros alunos sobre o curso de Automação Industrial, o colégio, os professores e o processo seletivo. Use as informações implícitas no site para formular suas respostas. Seja direto, use uma linguagem jovem e informativa, e mantenha as respostas curtas e objetivas. O site já fala sobre: o curso ser multi-área (Mecânica, Eletrônica, Programação), mercado de trabalho, salários, vestibulinho, e tem uma lista completa de professores com suas áreas. Responda sempre em português do Brasil.`;
+                    const systemInstruction = `Você é um assistente virtual amigável do Colégio Técnico Industrial de Guaratinguetá (CTIG) para o curso de Automação Industrial. Sua missão é tirar dúvidas de futuros alunos. Use uma linguagem jovem e informativa. Mantenha as respostas curtas e objetivas.
+                    CONHECIMENTO BASE:
+                    - O curso é multi-área: Mecânica, Eletrônica e Programação.
+                    - Professores e Matérias: Pimenta (Robótica), Iara (Inglês), Estevão (Microcontroladores), Lilian (Português e Redação), Jonas (CAD/Desenho Técnico), Maria Bethânia (Literatura), Bruno Soncino (Programação/Informática), Jomar (Comandos Elétricos), Luís Guilherme (Eletrônica Analógica), Maria Beatriz (História da Arte), Donizeti (História), Robson (Física), Lúcio (Gestão), Everaldo (Geografia), Christie (Filosofia), Aline (Espanhol), Decio (Biologia), Donato (Química), Glauco (Educação Física), Riceli (Matemática).
+                    - Mercado: Salário inicial de R$2.500-R$3.200, pode passar de R$12.000 com especialização. Áreas: automobilística, farmacêutica, etc.
+                    - Vestibulinho: Provas e gabaritos de anos anteriores estão disponíveis no site.
+                    - Geral: O colégio é da UNESP. O curso busca inclusão na EEAR.
+                    Responda sempre em português do Brasil.`;
                     const response = await callGemini(userInput, systemInstruction);
                     questionResult.innerHTML = `<p>${response}</p>`;
                 } catch (error) {
@@ -769,7 +776,7 @@
 
                 const fileExists = async (url) => {
                     try {
-                        const response = await fetch(url, { method: 'HEAD', cache: 'no-store' });
+                        const response = await fetch(new URL(url, window.location.href), { method: 'HEAD', cache: 'no-store' });
                         return response.ok;
                     } catch (error) {
                         return false;
