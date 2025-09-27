@@ -113,14 +113,16 @@
             <section id="inicio" class="content-section">
                 <div class="flex flex-col items-center justify-center text-center">
                      <div id="quiz-container">
-                        <h2 id="hero-text" class="text-3xl md:text-4xl font-bold mb-4 text-white">Aqui é o seu lugar!</h2>
-                        <p class="text-gray-400 mb-8 max-w-xl">Ainda não tem certeza do seu caminho? Responda 3 perguntas rápidas e descubra se o curso mais completo e inovador do CTIG é a sua cara.</p>
+                        <div id="quiz-intro">
+                            <h2 id="hero-text" class="text-3xl md:text-4xl font-bold mb-4 text-white">Aqui é o seu lugar!</h2>
+                            <p class="text-gray-400 mb-8 max-w-xl">Ainda não tem certeza do seu caminho? Responda 3 perguntas rápidas e descubra se o curso mais completo e inovador do CTIG é a sua cara.</p>
+                        </div>
                         <div id="quiz-content"></div>
                         <div id="quiz-result" class="hidden text-center mt-8">
-                            <h2 class="text-2xl md:text-3xl font-bold mb-4">Analisando suas respostas...</h2>
+                           <h2 class="text-2xl md:text-3xl font-bold mb-4">Analisando suas respostas...</h2>
                             <div class="zoomIn-animation bg-red-600/20 border border-red-500 rounded-lg p-8">
-                                <h3 class="font-title text-4xl md:text-6xl tracking-wider text-red-500 mb-4">AUTOMAÇÃO INDUSTRIAL</h3>
-                                <p class="text-lg text-gray-200">Bem-vindo ao futuro! Você tem uma mente criativa e pronta para desafios. Por isso, seu caminho é o <strong>curso mais completo e versátil do CTIG!</strong></p>
+                                <h3 class="font-title text-4xl md:text-6xl tracking-wider text-red-500 mb-4"></h3>
+                                <p class="text-lg text-gray-200"></p>
                             </div>
                            <button id="restart-quiz" class="mt-8 bg-red-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-red-700 transition-all duration-300">Fazer novamente</button>
                         </div>
@@ -530,19 +532,63 @@
             });
 
             const quizContainer = document.getElementById('quiz-container');
+            const quizIntro = document.getElementById('quiz-intro');
             const quizContent = document.getElementById('quiz-content');
             const quizResult = document.getElementById('quiz-result');
             const restartQuizBtn = document.getElementById('restart-quiz');
             const quizData = [ { question: "No colégio, qual grupo de matérias mais te atrai?", answers: ["Matemática, Física e Lógica", "História, Português e Sociologia", "Biologia, Química e Ed. Física", "Artes, Literatura e Filosofia"] }, { question: "O que você mais gosta de fazer no tempo livre?", answers: ["Criar/montar objetos e resolver quebra-cabeças", "Ler, escrever ou debater assuntos", "Cuidar de plantas/animais", "Desenhar ou tocar um instrumento"] }, { question: "Qual área de carreira te chama mais atenção?", answers: ["Engenharias (tecnologia, robôs, software)", "Ciências Biológicas e da Saúde", "Ciências Humanas e Sociais", "Artes e Design"] } ];
             let currentQuestionIndex = 0;
+            let userScore = 0;
+
             function loadQuestion() {
-                quizResult.classList.add('hidden'); quizContent.classList.remove('hidden'); const q = quizData[currentQuestionIndex];
-                quizContent.innerHTML = `<div class="zoomIn-animation"><h3 class="text-xl md:text-2xl font-semibold mb-6">${q.question}</h3><div class="grid grid-cols-1 md:grid-cols-2 gap-4">${q.answers.map(a => `<button class="quiz-option interactive-card w-full bg-gray-800 p-4 rounded-lg text-left transition-all duration-300 border border-gray-700">${a}</button>`).join('')}</div><div class="w-full bg-gray-700 rounded-full h-2.5 mt-8"><div class="bg-red-600 h-2.5 rounded-full" style="width: ${((currentQuestionIndex + 1) / quizData.length) * 100}%"></div></div></div>`;
-                document.querySelectorAll('.quiz-option').forEach(o => o.addEventListener('click', () => { currentQuestionIndex++; (currentQuestionIndex < quizData.length) ? loadQuestion() : showResult(); }));
+                quizResult.classList.add('hidden'); 
+                quizContent.classList.remove('hidden'); 
+                quizIntro.classList.remove('hidden');
+                const q = quizData[currentQuestionIndex];
+                quizContent.innerHTML = `<div class="zoomIn-animation"><h3 class="text-xl md:text-2xl font-semibold mb-6">${q.question}</h3><div class="grid grid-cols-1 md:grid-cols-2 gap-4">${q.answers.map((a, index) => `<button data-index="${index}" class="quiz-option interactive-card w-full bg-gray-800 p-4 rounded-lg text-left transition-all duration-300 border border-gray-700">${a}</button>`).join('')}</div><div class="w-full bg-gray-700 rounded-full h-2.5 mt-8"><div class="bg-red-600 h-2.5 rounded-full" style="width: ${((currentQuestionIndex + 1) / quizData.length) * 100}%"></div></div></div>`;
+                
+                document.querySelectorAll('.quiz-option').forEach(option => {
+                    option.addEventListener('click', (e) => {
+                        const selectedIndex = parseInt(e.currentTarget.dataset.index);
+                        if (selectedIndex === 0) {
+                            userScore++;
+                        }
+                        currentQuestionIndex++;
+                        if (currentQuestionIndex < quizData.length) {
+                            loadQuestion();
+                        } else {
+                            showResult();
+                        }
+                    });
+                });
             }
-            function showResult() { quizContent.classList.add('hidden'); quizResult.classList.remove('hidden'); }
-            function restartQuiz() { currentQuestionIndex = 0; loadQuestion(); }
-            restartQuizBtn.addEventListener('click', restartQuiz);
+
+            function showResult() {
+                quizContent.classList.add('hidden');
+                quizIntro.classList.add('hidden');
+                quizResult.classList.remove('hidden');
+                const resultCard = quizResult.querySelector('.zoomIn-animation');
+                const resultTitle = resultCard.querySelector('h3');
+                const resultText = resultCard.querySelector('p');
+
+                if (userScore >= 2) {
+                    resultTitle.innerHTML = "AUTOMAÇÃO INDUSTRIAL";
+                    resultText.innerHTML = "Bem-vindo ao futuro! Suas respostas mostram que você tem uma mente criativa e pronta para desafios. Por isso, seu caminho é o <strong>curso mais completo e versátil do CTIG!</strong>";
+                } else {
+                    resultTitle.innerHTML = "UM MUNDO DE POSSIBILIDADES";
+                     resultText.innerHTML = "Suas respostas mostram que você é uma pessoa versátil! Sabia que em Automação você aprende a conectar várias áreas? <strong>Mecânica, eletrônica e programação se unem</strong> para criar a tecnologia que move o mundo. É o curso perfeito para quem tem múltiplos interesses!";
+                }
+            }
+
+            function restartQuiz() {
+                currentQuestionIndex = 0;
+                userScore = 0;
+                loadQuestion();
+            }
+            
+            if (restartQuizBtn) {
+                restartQuizBtn.addEventListener('click', restartQuiz);
+            }
             loadQuestion();
 
             const themeToggle = document.getElementById('themeToggle'); const body = document.body; const savedTheme = localStorage.getItem('theme'); const themeText = document.getElementById('themeText');
